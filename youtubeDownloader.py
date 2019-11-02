@@ -32,24 +32,46 @@ def yt_search(args):
     yt_response = youtube.search().list(
         q=args.SEARCH, # The parameter q specifies the query term to be searched.
         part='id, snippet', # The part parameter specifies a comma separated list of one or more search resource properties that the API response will include.
-        maxResults=args.max_results # With the '_' instead of '-'
+        maxResults=args.max_results, # With the '_' instead of '-'.
+        order="relevance", # Videos will be sorted by visits.
+        regionCode=myRegion() # The API will display the search results for the specified country.
     ).execute()
 
     videos = []
 
     for yt_result in yt_response.get('items', []):
         if yt_result['id']['kind'] == "youtube#video":
-            videos.append('%s (%s)' % (yt_result['snippet']['title'], yt_result['id']['videoId']))
+            videos.append('%s (%s)' % (yt_result['snippet']['title'], 
+                yt_result['id']['videoId']))
+            # print("ID DEL VIDEO :: ", yt_result['id']['videoId'])
 
     print("Videos: \n", "\n".join(videos), "\n")
 
 
+# myRegion() will return the ISO 3166 alpha-2 code of yout region.
+# If your region is not in the list, read README.md for details.
+def myRegion(): # returns a STRING
+    
+    someRegions = {
+        "Madrid" : "ES",
+        "Paris" : "FR",
+        "London" : "GB",
+        "Berlin" : "DE",
+        "Rome" : "IT",
+        "America" : "US"
+    }
 
+    stupidList = ["Madrid", "Paris", "London", "Berlin", "Rome", "America"]
 
-
-
-
-
+    command = "cat /etc/timezone"
+    # WTF is this, so, .run runs the command, .stdout takes the output, .decode decodes the byte output to string.
+    zone = subprocess.run(shlex.split(command), stdout=subprocess.PIPE).stdout.decode('utf-8')
+    
+    # TODO: Improve this little function
+    for z in stupidList:
+        if(z in zone):
+            return someRegions[z]
+    return "ES" # Default: Spain
 
 
 
