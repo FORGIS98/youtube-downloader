@@ -10,7 +10,10 @@ from googleapiclient.errors import HttpError
 DEVELOPER_KEY = os.environ['DEV_KEY']
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = 'v3'
+MY_YOUTUBE_SEARCH="https://www.youtube.com/watch?v="
+USER_FOLDER = "\'/home/jorge/Música/%(title)s.%(ext)s\'"
 
+##########################################################################################
 # In python3 you don't need the if __name__ == '__main__':
 def main():
     parser = argparse.ArgumentParser()
@@ -23,8 +26,7 @@ def main():
     # flags = " -l -a"
     # com_line = "ls" + flags
     # subprocess.call(shlex.split(com_line))
-    
-
+##########################################################################################
 # yt_search(args) returns the youtube search specified in --SEARCH flag
 def yt_search(args):
     youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
@@ -38,16 +40,25 @@ def yt_search(args):
     ).execute()
 
     videos = []
+    videoId = []
 
     for yt_result in yt_response.get('items', []):
         if yt_result['id']['kind'] == "youtube#video":
-            videos.append('%s (%s)' % (yt_result['snippet']['title'], 
-                yt_result['id']['videoId']))
-            # print("ID DEL VIDEO :: ", yt_result['id']['videoId'])
+            videos.append('%s ' % (yt_result['snippet']['title']))
+            videoId.append('%s ' % (yt_result['id']['videoId']))
+    video_selection(videos, videoId)
+##########################################################################################
+def video_selection(videos, videoId):
+    for i in range (len(videos)):
+        print("Video Nº", i+1, ":", videos[i])
+    print("\n")
 
-    print("Videos: \n", "\n".join(videos), "\n")
+    x = int(input("Choose the video you like to download: ")) - 1
+    com_line = "youtube-dl -x --audio-format mp3 -o "+ USER_FOLDER + " " + MY_YOUTUBE_SEARCH + videoId[x]
+    # subprocess.call(shlex.split(com_line))
+    print("CONTROL PRINT")
 
-
+##########################################################################################
 # myRegion() will return the ISO 3166 alpha-2 code of yout region.
 # If your region is not in the list, read README.md for details.
 def myRegion(): # returns a STRING
@@ -72,6 +83,7 @@ def myRegion(): # returns a STRING
         if(z in zone):
             return someRegions[z]
     return "ES" # Default: Spain
+##########################################################################################
 
 
 
