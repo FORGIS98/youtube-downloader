@@ -53,20 +53,24 @@ class downloader():
         ).execute()
 
         videos = []
+        thumbNails = []
         videoId = []
 
         for yt_result in yt_response.get('items', []):
             if yt_result['id']['kind'] == "youtube#video":
                 videos.append('%s ' % (yt_result['snippet']['title']))
                 videoId.append('%s ' % (yt_result['id']['videoId']))
-        self.video_selection(videos, videoId)
+                thumbNails.append('%s ' % (yt_result['snippet']['thumbnails']['default']['url']))
+        self.video_selection(videos, videoId, thumbNails)
 
-    def video_selection(self, videos, videoId):
+    def video_selection(self, videos, videoId, thumbNails):
         for i in range (len(videos)):
             print("Video Nº", i+1, ":", videos[i])
+            subprocess.call(shlex.split("wget -q %s" % (thumbNails[i]) + " -O image_%d.jpg" % (i)))
         print("\n")
 
         x = int(input("Choose the video you like to download: ")) - 1
+        subprocess.call(shlex.split("rm image_{1-}"))
         com_line = "youtube-dl -x --audio-format mp3 -o "+ USER_FOLDER + " " + MY_YOUTUBE_SEARCH + videoId[x]
         #subprocess.call(shlex.split(com_line))
         print("CONTROL PRINT")
