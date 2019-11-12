@@ -1,5 +1,7 @@
-# VIM
+# VIM / sonarQube
 *.swp
+*.properties
+*.scannerwork
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

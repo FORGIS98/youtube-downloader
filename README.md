@@ -8,6 +8,11 @@ sudo apt install youtube-dl
 sudo pacman -Sy youtube-dl
 sudo pip3 install youtube-dl
 ```
+```bash
+sudo apt install python-pil.imagetk
+yum install python-imaging
+pip install pillow
+```
 I will see if it is also necessary to install youtube API on your computer.
 
 ## Contributing
