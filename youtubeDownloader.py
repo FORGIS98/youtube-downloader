@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os                   # for environment variables
+from shutil import rmtree   # To remove pics directory with the video thumbnail.
 import argparse             # for flags
 import subprocess, shlex    # to call UNIX commands
 
@@ -64,13 +65,16 @@ class downloader():
         self.video_selection(videos, videoId, thumbNails)
 
     def video_selection(self, videos, videoId, thumbNails):
+        print("This make take a couple of seconds. The script is downloading the thumbnail picture for the user interface.")
         for i in range (len(videos)):
             print("Video Nº", i+1, ":", videos[i])
             subprocess.call(shlex.split("wget -q %s" % (thumbNails[i]) + " -O image_%d.jpg" % (i)))
+            subprocess.call(shlex.split("mkdir -p downloaderPics"))
+            subprocess.call(shlex.split("mv ./image_%d.jpg ./downloaderPics" % (i)))
         print("\n")
 
         x = int(input("Choose the video you like to download: ")) - 1
-        subprocess.call(shlex.split("rm image_{1-}"))
+        rmtree("downloaderPics") # This will delete the files we just created.
         com_line = "youtube-dl -x --audio-format mp3 -o "+ USER_FOLDER + " " + MY_YOUTUBE_SEARCH + videoId[x]
         #subprocess.call(shlex.split(com_line))
         print("CONTROL PRINT")
