@@ -5,12 +5,12 @@ import argparse             # for flags
 import subprocess, shlex    # to call UNIX commands
 
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 DEVELOPER_KEY = os.environ['DEV_KEY']
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = 'v3'
 MY_YOUTUBE_SEARCH="https://www.youtube.com/watch?v="
+USER_FOLDER_YT = ""
 USER_FOLDER = ""
 USER_FORMAT = ""
 USER_MAX_RESULTS = ""
@@ -65,16 +65,30 @@ class downloader():
                 videosChannel.append('%s ' % (yt_result['snippet']['channelTitle']))
         self.video_selection(videos, videoId, videosChannel)
 
+    def changeName(self):
+        yesNo = str(input("Do you want to rename the title? [Y/n]: "))
+        y = ""
+        if(yesNo == "" or yesNo == "Y" or yesNo == "y"):
+            y = str(input("New title: "))
+        return y
+
     def video_selection(self, videos, videoId, videosChannel):
         for i in range (len(videos)):
-            print("----------------------------------------------------------------------")
+            print("")
             print("Video Nº " + "%d" % (i+1) + ": " + videos[i] + "   Uploaded by: " + videosChannel[i])
-        print("----------------------------------------------------------------------")
+        print("")
         print("\n")
 
         x = int(input("Choose the video you like to download: ")) - 1
-        com_line = "youtube-dl -x --audio-format " + USER_FORMAT + " -o "+ USER_FOLDER + " " + MY_YOUTUBE_SEARCH + videoId[x]
-        #subprocess.call(shlex.split(com_line))
+        com_line = "youtube-dl -x --audio-format " + USER_FORMAT + " -o "+ USER_FOLDER_YT + " " + MY_YOUTUBE_SEARCH + videoId[x]
+        y = self.changeName()
+        if(y != ""):
+            subprocess.call(shlex.split(com_line))
+            print("MY SONG BRO :: " + videos[x])
+            com_line = "mv " + USER_FOLDER + videos[x] + " " + USER_FOLDER + y + "." + USER_FORMAT
+            subprocess.call(shlex.split(com_line))
+        else:
+            subprocess.call(shlex.split(com_line))
         print("CONTROL PRINT")
 
 # In python3 you don't need the if __name__ == '__main__':
@@ -88,7 +102,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if USER_FOLDER == "":
-        USER_FOLDER = "\'" + args.folder + "%(title)s.%(ext)s\'"
+        USER_FOLDER_YT = "\'" + args.folder + "%(title)s.%(ext)s\'"
+        USER_FOLDER = args.folder
     if USER_FORMAT == "":
         USER_FORMAT = args.format
     if USER_MAX_RESULTS == "":
