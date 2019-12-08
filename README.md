@@ -1,4 +1,4 @@
-# youtubeDownloader (in progress)
+# youtubeDownloader (Stopped but not abandoned)
 This tool will help you downloading mp3 and mp4 youtube videos.
 
 ## Prerequisites
@@ -8,12 +8,5 @@ sudo apt install youtube-dl
 sudo pacman -Sy youtube-dl
 sudo pip3 install youtube-dl
 ```
-```bash
-sudo apt install python-pil.imagetk
-yum install python-imaging
-pip install pillow
-```
 I will see if it is also necessary to install youtube API on your computer.
 
-## Contributing
-I hope this doesn't sound rude or unfriendly. But I'm not looking for help right now, I would like to do the project myself. When I need help, I will delete this text and it will not appear again.
