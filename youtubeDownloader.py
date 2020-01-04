@@ -10,10 +10,10 @@ DEVELOPER_KEY = os.environ['DEV_KEY']
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = 'v3'
 MY_YOUTUBE_SEARCH="https://www.youtube.com/watch?v="
-USER_FOLDER_YT = ""
-USER_FOLDER = ""
-USER_FORMAT = ""
-USER_MAX_RESULTS = ""
+USER_FOLDER_YT = "\'~/Música/%(title)s.%(ext)s\'"
+USER_FOLDER = "~/Música"
+USER_FORMAT = "mp3"
+USER_MAX_RESULTS = "5"
 
 
 class downloader():
@@ -85,13 +85,14 @@ class downloader():
         if(y != ""):
             subprocess.call(shlex.split(com_line))
             print("MY SONG BRO :: " + videos[x])
-            com_line = "mv " + USER_FOLDER + videos[x] + " " + USER_FOLDER + y + "." + USER_FORMAT
+            path = "mv " + USER_FOLDER + "/" + videos[x] + " " + USER_FOLDER + "/" + y + "." + USER_FORMAT
+            print(" Path ::", path)
+            com_line = path
             subprocess.call(shlex.split(com_line))
         else:
             subprocess.call(shlex.split(com_line))
         print("CONTROL PRINT")
 
-# In python3 you don't need the if __name__ == '__main__':
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--SEARCH', help="Search from term.", default="youtube")
@@ -102,7 +103,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if USER_FOLDER == "":
-        USER_FOLDER_YT = "\'" + args.folder + "%(title)s.%(ext)s\'"
+        USER_FOLDER_YT = "\'" + args.folder + "/%(title)s.%(ext)s\'"
         USER_FOLDER = args.folder
     if USER_FORMAT == "":
         USER_FORMAT = args.format
