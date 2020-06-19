@@ -85,10 +85,13 @@ class downloader():
         if(y != ""):
             subprocess.call(shlex.split(com_line))
             print("MY SONG BRO :: " + videos[x])
-            path = "mv " + USER_FOLDER + "/" + videos[x] + " " + USER_FOLDER + "/" + y + "." + USER_FORMAT
-            print(" Path ::", path)
-            com_line = path
-            subprocess.call(shlex.split(com_line))
+            oldOne = os.path.join(USER_FOLDER, videos[x])
+            newOne = os.path.join(USER_FOLDER, y)
+            os.rename(oldOne, newOne)
+            # path = "mv " + USER_FOLDER + "/" + videos[x] + " " + USER_FOLDER + "/" + y + "." + USER_FORMAT
+            # print(" Path ::", path)
+            # com_line = path
+            # subprocess.call(shlex.split(com_line))
         else:
             subprocess.call(shlex.split(com_line))
         print("CONTROL PRINT")
