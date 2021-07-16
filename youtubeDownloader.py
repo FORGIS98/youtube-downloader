@@ -17,6 +17,10 @@ YOUTUBE_DL_URL="https://www.youtube.com/watch?v="
 ### BEGIN - AUX FUNCTIONS ###
 
 def getUserRegion():
+    """
+    Returns your region, we use the value when searching videos on youtube.
+    Default value is ES
+    """
     someRegions = {
         "Madrid" : "ES",
         "Paris" : "FR",
@@ -34,6 +38,9 @@ def getUserRegion():
 
 
 def changeName():
+    """
+    Allows to give a new name to the video you are about to download.
+    """
     ans = str(input("Do you want to rename the title? [Y/n]: "))
     if(ans in ["", "Y", "y"]):
         newName = str(input("New title: "))
@@ -46,6 +53,9 @@ def changeName():
 
 
 def yt_search(args):
+    """ 
+    Calls Youtube API and gets a list of videos.
+    """
     youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
 
     yt_response = youtube.search().list(
@@ -60,15 +70,19 @@ def yt_search(args):
     videosId = []
     videosChannel = []
 
+    # We "sort" the info in 3 diff lists
     for yt_result in yt_response.get('items', []):
         if yt_result['id']['kind'] == "youtube#video":
-            videos.append('%s ' % (yt_result['snippet']['title']))
-            videosId.append('%s ' % (yt_result['id']['videoId']))
-            videosChannel.append('%s ' % (yt_result['snippet']['channelTitle']))
+            videos.append('%s ' % (yt_result['snippet']['title'])) # To show the video title
+            videosId.append('%s ' % (yt_result['id']['videoId'])) # To know the video id you may want to download
+            videosChannel.append('%s ' % (yt_result['snippet']['channelTitle'])) # To know the channels name
     video_selection(videos, videosId, videosChannel, args)
 
 
 def video_selection(videos, videosId, videosChannel, args):
+    """
+    Shows a list of videos and let's you choose one, change the name and download it.
+    """
     print("")
     for i in range (len(videos)):
         print("Video Nº " + "%d" % (i+1) + ": " + videosChannel[i] + " ==> " + videos[i])
@@ -85,7 +99,7 @@ def video_selection(videos, videosId, videosChannel, args):
 
 if __name__ == '__main__':
 
-    music_folder = subprocess.getoutput('xdg-user-dir MUSIC')
+    music_folder = subprocess.getoutput('xdg-user-dir MUSIC') # Get your music folder
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--SEARCH', help="Search from term", default="Music")
