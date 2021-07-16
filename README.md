@@ -11,14 +11,14 @@ First step is to get youtube API token (to be aible to call youtube API):
 This tool will use [youtube-dl](https://github.com/ytdl-org/youtube-dl):
 ```bash
 sudo apt install youtube-dl
-sudo pacman -Sy youtube-dl
+sudo pacman -S youtube-dl
 sudo pip install youtube-dl
 ```
 Or check https://github.com/ytdl-org/youtube-dl  
 
 Then also the python library [google-api-python-client](https://github.com/googleapis/google-api-python-client)
 ```bash
-pip isntall google-api-python-client
+pip install google-api-python-client
 ```
 
 ## About Python
