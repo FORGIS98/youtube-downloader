@@ -11,10 +11,11 @@ DEVELOPER_KEY = os.environ['DEV_KEY']
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = 'v3'
 
-# This is for youtube-dl
 YOUTUBE_DL_URL="https://www.youtube.com/watch?v="
 
+
 ### BEGIN - AUX FUNCTIONS ###
+
 def getUserRegion():
     someRegions = {
         "Madrid" : "ES",
@@ -35,8 +36,12 @@ def getUserRegion():
 def changeName():
     ans = str(input("Do you want to rename the title? [Y/n]: "))
     if(ans in ["", "Y", "y"]):
-        return str(input("New title: "))
-    return None
+        newName = str(input("New title: "))
+        newName += ".%(ext)s"
+        return newName
+    # Format for youtube-dl, the video/audio will have the original yt name
+    return "%(title)s-%(id)s.%(ext)s" 
+
 ### END - AUX FUNCTIONS ###
 
 
@@ -52,45 +57,45 @@ def yt_search(args):
     ).execute()
 
     videos = []
-    videoId = []
+    videosId = []
     videosChannel = []
 
     for yt_result in yt_response.get('items', []):
         if yt_result['id']['kind'] == "youtube#video":
             videos.append('%s ' % (yt_result['snippet']['title']))
-            videoId.append('%s ' % (yt_result['id']['videoId']))
+            videosId.append('%s ' % (yt_result['id']['videoId']))
             videosChannel.append('%s ' % (yt_result['snippet']['channelTitle']))
-    video_selection(videos, videoId, videosChannel, args)
+    video_selection(videos, videosId, videosChannel, args)
 
 
-def video_selection(videos, videoId, videosChannel, args):
+def video_selection(videos, videosId, videosChannel, args):
     print("")
     for i in range (len(videos)):
         print("Video Nº " + "%d" % (i+1) + ": " + videosChannel[i] + " ==> " + videos[i])
     print("")
     print("\n")
 
-    # x = int(input("Choose the video you like to download: ")) - 1
-    # com_line = "youtube-dl -x --audio-format " + args.format + " -o "+ args.folder + " " + YOUTUBE_DL_URL + videoId[x]
-    # 
-    # newName = changeName()
-    # if(newName != None):
-    #     subprocess.call(shlex.split(com_line))
-    #     oldOne = os.path.join(args.folder, videos[x])
-    #     newOne = os.path.join(args.folder, newName)
-    #     os.rename(oldOne, newOne)
-    # else:
-    #     subprocess.call(shlex.split(com_line))
+    videoNumber = int(input("Choose the video you like to download: ")) - 1
+    newName = changeName()
+
+    command = "youtube-dl -x --audio-format " + args.format + " -o " + args.folder + newName + " " + YOUTUBE_DL_URL + videosId[videoNumber]
+    print(command)
+    subprocess.call(shlex.split(command))
 
 
 if __name__ == '__main__':
+
+    music_folder = subprocess.getoutput('xdg-user-dir MUSIC')
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--SEARCH', help="Search from term", default="Music")
     parser.add_argument('--max-results', help="Max results output", default=5)
-    parser.add_argument('--folder', help="Full path to downloads folder", default="~/")
+    parser.add_argument('--folder', help="Full path to downloads folder", default=music_folder)
     parser.add_argument('--format', help="mp3 or mp4", default="mp3")
-
     args = parser.parse_args()
+
+    if(not args.folder.endswith("/")):
+        args.folder += "/"
 
     try:
         yt_search(args)
