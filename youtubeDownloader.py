@@ -29,7 +29,6 @@ def getUserRegion():
         "Rome" : "IT",
         "America" : "US"
     }
-    command = "timedatectl | grep Time"
     zone = subprocess.getoutput('timedatectl show --va -p Timezone | cut -d\'/\' -f2')
     try:
         return someRegions[zone]
@@ -92,8 +91,11 @@ def video_selection(videos, videosId, videosChannel, args):
     videoNumber = int(input("Choose the video you like to download: ")) - 1
     newName = changeName()
 
-    command = "youtube-dl -x --audio-format " + args.format + " -o " + args.folder + newName + " " + YOUTUBE_DL_URL + videosId[videoNumber]
-    print(command)
+    if(args.format == "mp3"):
+        command = "youtube-dl -x --audio-format " + args.format + " -o " + args.folder + newName + " " + YOUTUBE_DL_URL + videosId[videoNumber]
+    else:
+        command = "youtube-dl --merge-output-format " + args.format + " -o " + args.folder + newName + " " + YOUTUBE_DL_URL + videosId[videoNumber]
+
     subprocess.call(shlex.split(command))
 
 
