@@ -54,7 +54,7 @@ The code has some default options if you don't put a flag. If you wan't to chang
 ```python
 # Original code
 parser.add_argument('--SEARCH', help="Search from term", default="Music")
-parser.add_argument('--max-results', help="Max results output", default=5)
+parser.add_argument('--max-results', help="Max results output", default=7)
 parser.add_argument('--folder', help="Full path to downloads folder", default=music_folder)
 parser.add_argument('--format', help="mp3 or mp4", default="mp3")
 
