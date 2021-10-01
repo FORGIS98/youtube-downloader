@@ -72,9 +72,6 @@ def yt_search(args):
     # We "sort" the info in 3 diff lists
     for yt_result in yt_response.get('items', []):
         if(yt_result['id']['kind'] == "youtube#video" and yt_result['snippet']['liveBroadcastContent'] != "live"):
-            print("\n\n")
-            print(yt_result)
-            print("\n\n")
             videos.append('%s ' % (yt_result['snippet']['title'])) # To show the video title
             videosId.append('%s ' % (yt_result['id']['videoId'])) # To know the video id you may want to download
             videosChannel.append('%s ' % (yt_result['snippet']['channelTitle'])) # To know the channels name
